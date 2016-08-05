@@ -1,6 +1,8 @@
 "use strict";
 var app = require('express')()
 var wsapp = require('express-ws')(app)
+var hashids = require('hashids')
+var hasher = new hashids('salt done drunk')
 var odd = {}
 
 app.ws('*', (ws, req) => {
@@ -102,6 +104,10 @@ class Odd {
 	}
 }
 
+app.get('/', (req, res, next) => {
+	res.redirect(hasher.encode(+new Date))
+})
+
 app.get('*', (req, res, next) => {
 	var id = req.params[0].split('/')[1].toString()
 	if(id) {
@@ -136,11 +142,11 @@ body { font-family: sans-serif; }
 <body>
 <div id='container'>
 <div class='reset' id='timer'></div>
-<div class='text' id='t' contenteditable='true'></div>
 <div class='text' id='tl' contenteditable='true'></div>
+<div class='text' id='t' contenteditable='true'></div>
 <div class='text' id='tr' contenteditable='true'></div>
-<div class='text' id='b' contenteditable='true'></div>
 <div class='text' id='bl' contenteditable='true'></div>
+<div class='text' id='b' contenteditable='true'></div>
 <div class='text' id='br' contenteditable='true'></div>
 <div id='controls'><button>start</button><button>pause</button><button>stop</button><button>reset</button></div>
 </div>
