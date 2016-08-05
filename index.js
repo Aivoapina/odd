@@ -36,6 +36,7 @@ class Odd {
 		this.broadcast()
 	}
 	pause() {
+		if(!this.started || this.stopped) return
 		if(!this.paused) {
 			this.paused = +new Date
 		} else {
@@ -45,7 +46,9 @@ class Odd {
 		this.broadcast()
 	}
 	stop() {
+		if(!this.started) return
 		this.stopped = +new Date
+		this.paused = 0
 		this.broadcast()
 	}
 	reset() {
@@ -112,15 +115,15 @@ app.get('*', (req, res, next) => {
 <html>
 <head>
 <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
 <title>Overlay Done Drunk</title>
 <style>
 * { margin: 0; padding: 0; background: transparent; }
 body { font-family: sans-serif; }
 #timer { font-size: 60px; position: absolute; bottom: 0; right: 0; padding: 0 10px 0 0; font-family: 'Calibri', sans-serif; font-weight: bold; }
 #timer span { font-size: 0.7em; }
-#controls { width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; margin: -100px -100px; display: none; }
+#controls { width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; margin: -100px -100px; }
 #controls button { width: 100%; padding: 10px; text-transform: uppercase; }
-#controls.show { display: block; }
 .text { white-space: pre; padding: 10px; font-size: 20px; position: absolute; overflow: show; width: 33.333% }
 #t { top: 0; left: 33.333%; text-align: center; }
 #tl { top: 0; left: 0; }
@@ -197,14 +200,6 @@ for(var i of document.getElementsByClassName('text')) {
 		ws.send(JSON.stringify(cmd))
 	}, false)
 }
-var hideOut = 0;
-document.addEventListener('mousemove', (e) => {
-	controls.className = 'show'
-	clearTimeout(hideOut)
-	hideOut = setTimeout(() => {
-		controls.className = ''
-	}, 2000)
-})
 </script>
 </body>
 </html>
