@@ -176,6 +176,9 @@ ws.onopen = function(e) {
 		for(var i of Object.keys(odd.text)) {
 			document.getElementById(i).innerHTML = odd.text[i]
 		}
+		if(odd.stopped) timer.className = 'stop'
+		else if(odd.paused) timer.className = 'pause'
+		else if(odd.started) timer.className = 'start'
 	}
 	ws.send(JSON.stringify({ cmd: 'status' }))
 }
@@ -186,7 +189,6 @@ for(var i of document.getElementsByTagName('button')) {
 	i.addEventListener('click', (e) => {
 		var cmd = { cmd: e.target.innerHTML, arg: '' }
 		ws.send(JSON.stringify(cmd))
-		timer.className = e.target.innerHTML
 	}, false)
 }
 for(var i of document.getElementsByClassName('text')) {
