@@ -64,8 +64,6 @@ class Odd {
 		out.paused = this.paused
 		out.stopped = this.stopped
 		out.time = this.time
-		out.precision = this.precision
-		out.trim = this.trim
 		out.now = +new Date()
 		out.text = this.text
 		return out
@@ -103,21 +101,14 @@ class Odd {
 
 app.get('*', (req, res, next) => {
 	var id = req.params[0].split('/')[1].toString()
-	var cmd = req.params[0].split('/')[2].toString()
-	var out = {}
 	if(id) {
 		var self = odd[id]
 		if(self == undefined) {
 			self = new Odd
 			odd[id] = self
 		}
-		self.run(cmd)
-		out = self.status
 	}
-	if(cmd) {
-		res.send(JSON.stringify(out))
-	} else {
-		res.send(`<!doctype html>
+	res.send(`<!doctype html>
 <html>
 <head>
 <meta charset='utf-8'>
@@ -153,7 +144,7 @@ body { font-family: sans-serif; }
 <script src='//cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js'></script>
 <script>
 "use strict";
-var odd = { started: 0, paused: 0, stopped: 0, trim: true, precision: 2, error: 0, text: {} },
+var odd = { started: 0, paused: 0, stopped: 0, error: 0, text: {} },
 	timer = document.getElementById('timer'),
 	controls = document.getElementById('controls')
 var ttime = function(time) {
@@ -164,14 +155,10 @@ var ttime = function(time) {
   if(m < 10) m = '0'+m
   var h = Math.floor((time / (1000 * 60 * 60)) % 24)
   if(h < 10) h = '0'+h
-  var newTime = h+':'+m+':'+(odd.precision?(s<10?'0':'')+s.toFixed(odd.precision):Math.floor(s))
-  if(odd.trim) {
-    newTime = newTime.replace(/^[0:]+/, '')
-  }
-  if(odd.precision) {
-    newTime = newTime.replace(/^[\.]/, '0.')
-    newTime = newTime.replace('.','<span>.')+'</span>'
-  }
+  var newTime = h+':'+m+':'+(s<10?'0':'')+s.toFixed(2)
+  newTime = newTime.replace(/^[0:]+/, '')
+  newTime = newTime.replace(/^[\.]/, '0.')
+  newTime = newTime.replace('.','<span>.')+'</span>'
   return newTime
 }
 var format = function() {
@@ -220,7 +207,6 @@ document.addEventListener('mousemove', (e) => {
 </body>
 </html>
 `)
-	}
 	res.end()
 })
 app.listen(4209)
