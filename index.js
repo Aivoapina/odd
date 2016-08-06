@@ -130,11 +130,11 @@ body { font-family: sans-serif; }
 #timer span { font-size: 0.7em; }
 #controls { width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; margin: -100px -100px; }
 #controls button { width: 100%; padding: 10px; text-transform: uppercase; }
-.text { white-space: pre; padding: 10px; font-size: 20px; position: absolute; overflow: show; width: 33.333% }
-#t { top: 0; left: 33.333%; text-align: center; }
+.text { white-space: pre; padding: 10px; font-size: 20px; position: absolute; overflow: visible; box-sizing: border-box; width: 33.333% }
+#t { top: 0; left: 10%; width: 80%; text-align: center; }
 #tl { top: 0; left: 0; }
 #tr { top: 0; right: 0; text-align: right; }
-#b { bottom: 0; left: 33.333%; text-align: center; }
+#b { bottom: 0; left: 10%; width: 80%; text-align: center; }
 #bl { bottom: 0; left: 0; }
 #br { bottom: 0; right: 0; text-align: right; }
 </style>
@@ -202,6 +202,7 @@ for(var i of document.getElementsByTagName('button')) {
 }
 for(var i of document.getElementsByClassName('text')) {
 	i.addEventListener('blur', (e) => {
+		if(e.target.textContent == '') e.target.innerHTML = ''
 		var cmd = { cmd: 'text', arg: { pos: e.target.id, text: e.target.innerHTML }}
 		ws.send(JSON.stringify(cmd))
 	}, false)
