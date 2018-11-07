@@ -4,7 +4,7 @@
   "description": "Overlay Done Drunk",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -15,6 +15,7 @@
   "dependencies": {
     "express": "^4.14.0",
     "express-ws": "^2.0.0-rc.1",
-    "hashids": "^1.1.0"
+    "hashids": "^1.1.0",
+    "nodemon": "^1.18.6"
   }
 }
